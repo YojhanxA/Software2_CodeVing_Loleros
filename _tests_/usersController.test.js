@@ -9,16 +9,14 @@ const Swipes = require("../models/Swipes");
 const Matches = require("../models/Matches");
 const Chat = require("../models/chat");
 const jwt = require("jsonwebtoken");
-const { getIO } = require("../socket"); // Mock esto si es necesario
+const { getIO } = require("../socket");
 
-// Mock de la función getIO si es necesario para las pruebas unitarias puras del controlador
 jest.mock("../socket", () => ({
     getIO: jest.fn(() => ({
         emit: jest.fn(),
     })),
 }));
 
-// Configuración de la base de datos en memoria para las pruebas
 let mongoServer;
 let app;
 
@@ -30,25 +28,23 @@ beforeAll(async () => {
         useUnifiedTopology: true,
     });
 
-    // Crear una instancia de Express para probar los controladores como middleware
     app = express();
     app.use(express.json());
-    // Definir rutas simuladas para los controladores (necesario para supertest)
     app.post("/register", usersController.register);
     app.get("/users", (req, res) => {
-        req.userId = "testUserId"; // Simula un usuario autenticado
+        req.userId = "testUserId";
         usersController.list(req, res);
     });
     app.post("/swipe", (req, res) => {
-        req.userId = "user1"; // Simula un usuario autenticado
+        req.userId = "user1";
         usersController.swipe(req, res);
     });
     app.get("/match", (req, res) => {
-        req.userId = "testUser"; // Simula un usuario autenticado
+        req.userId = "testUser";
         usersController.getMatch(req, res);
     });
     app.post("/mensaje", (req, res) => {
-        req.userId = "senderId"; // Simula un usuario autenticado
+        req.userId = "senderId";
         usersController.sendMessage(req, res);
     });
 });
@@ -59,7 +55,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-    // Limpiar las bases de datos antes de cada prueba
+
     await Users.deleteMany({});
     await Swipes.deleteMany({});
     await Matches.deleteMany({});
@@ -160,7 +156,7 @@ describe("usersController", () => {
         const user2 = new Users({ id: "user2", nombre: "User 2", email: "user2@example.com", password: "pass2", edad: 22, genero: "F" });
         await Promise.all([user1.save(), user2.save()]);
 
-        // User 2 likes User 1
+
         const swipeByUser2 = new Swipes({
             usuario_origen_id: "user2",
             usuario_destino_id: "user1",
@@ -168,7 +164,7 @@ describe("usersController", () => {
         });
         await swipeByUser2.save();
 
-        // User 1 likes User 2
+
         const response = await request(app)
             .post("/swipe")
             .send({ destinoId: "user2", accion: "like" });
@@ -273,7 +269,7 @@ describe("usersController", () => {
         );
         expect(response.body.message).toHaveProperty("senderName", "Sender");
 
-        // Obtener la instancia mock de io y su función emit
+
         const mockIO = getIO();
         expect(mockIO.emit).toHaveBeenCalledWith(
             "chat message",

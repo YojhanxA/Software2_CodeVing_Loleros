@@ -10,8 +10,8 @@ const UserSchema = new Schema({
   preferencias: { type: Object },
   ubicacion: { type: String },
   fotoPerfil: { type: String },
-  email: { type: String, required: true, unique: true }, // Asegúrate de tener esto
-  password: { type: String, required: true },          // Y esto
+  email: { type: String, required: true, unique: true }, 
+  password: { type: String, required: true },          
 }, { timestamps: true });
 
 module.exports = model("Users", UserSchema);

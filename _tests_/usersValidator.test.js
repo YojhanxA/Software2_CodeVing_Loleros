@@ -11,7 +11,7 @@ const {
 } = require("../middleware/usersValidator");
 const Users = require("../models/Users");
 const jwt = require("jsonwebtoken");
-require("dotenv").config(); // Cargar variables de entorno para JWT
+require("dotenv").config(); 
 
 let mongoServer;
 let app;
@@ -33,10 +33,10 @@ beforeAll(async () => {
     });
 
     app.post("/auth", isVisValidAuth, (req, res) => {
-        // Middleware isVisValidAuth envía la respuesta con el token, no necesitamos más aquí
+       
     });
 
-    app.get("/protected", authenticateToken, async (req, res) => { // Modificado a async
+    app.get("/protected", authenticateToken, async (req, res) => { 
         const user = await Users.findById(req.userId);
         if (user) {
             res.status(200).json({ userId: req.userId, nombre: user.nombre });
@@ -171,7 +171,7 @@ describe("usersValidator Middleware", () => {
                 genero: "M",
             });
             await testUser.save();
-            const token = jwt.sign({ userId: protectedId.toHexString() }, process.env.SECRET_JWT, { // Usa toHexString()
+            const token = jwt.sign({ userId: protectedId.toHexString() }, process.env.SECRET_JWT, { 
                 expiresIn: "1h",
             });
 
@@ -180,7 +180,7 @@ describe("usersValidator Middleware", () => {
                 .set("Authorization", `Bearer ${token}`);
 
             expect(response.statusCode).toBe(200);
-            expect(response.body).toHaveProperty("userId", protectedId.toHexString()); // Compara con toHexString()
+            expect(response.body).toHaveProperty("userId", protectedId.toHexString()); 
             expect(response.body).toHaveProperty("nombre", testUser.nombre);
         });
 

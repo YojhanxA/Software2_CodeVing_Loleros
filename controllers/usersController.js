@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const Chat = require("../models/chat");
 const User = require("../models/Users");
 const { v4: uuidv4 } = require("uuid");
-const { getIO } = require("../socket"); // Asegúrate de importar bien esto
+const { getIO } = require("../socket"); 
 
 const loginUser = async (req, res) => {
   res.status(200).json({ message: "Login exitoso" });
@@ -41,7 +41,7 @@ const register = async (req, res) => {
       fotoPerfil,
       email,
       password,
-      id: uuidv4(), // Genera un UUID para el nuevo usuario
+      id: uuidv4(), 
     });
 
     const savedUser = await newUser.save();
@@ -58,13 +58,14 @@ const register = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    // Buscar el usuario actual por su UUID (el 'id' que generaste)
+    
+
     const currentUser = await Users.findOne({ id: req.userId });
     if (!currentUser) {
       return res.status(404).json({ message: "Usuario actual no encontrado" });
     }
 
-    // Buscar todos los demás usuarios excluyendo al usuario actual por su UUID
+    
     const users = await Users.find({ id: { $ne: req.userId } });
     res.status(200).json(users);
   } catch (error) {
@@ -77,7 +78,7 @@ const list = async (req, res) => {
 
 const swipe = async (req, res) => {
   const { destinoId, accion } = req.body;
-  const origenId = req.userId; // Obtenido del middleware de autenticación
+  const origenId = req.userId; 
 
   try {
     const newSwipe = new Swipes({
@@ -87,7 +88,7 @@ const swipe = async (req, res) => {
     });
     await newSwipe.save();
 
-    // Verificar si hay un "like" mutuo
+    
     if (accion === "like") {
       const reverseSwipe = await Swipes.findOne({
         usuario_origen_id: destinoId,
@@ -121,7 +122,7 @@ const getMatch = async (req, res) => {
   const userId = req.userId;
 
   try {
-    // Buscar el match del usuario
+    
     const match = await Matches.findOne({
       $or: [{ usuario1_id: userId }, { usuario2_id: userId }],
     });
@@ -130,14 +131,14 @@ const getMatch = async (req, res) => {
       return res.status(404).json({ message: "No tienes un match." });
     }
 
-    // Obtener los mensajes del chat relacionado con el match
+    
     const chat = await Chat.findOne({ match_id: match.id }).populate(
       "messages"
     );
 
     const messages = chat ? chat.messages : [];
 
-    // Obtener los nombres de los usuarios involucrados en el match
+    
     const usuario1 = await User.findOne({ id: match.usuario1_id });
     const usuario2 = await User.findOne({ id: match.usuario2_id });
 
@@ -204,8 +205,8 @@ const sendMessage = async (req, res) => {
       senderName: senderUser?.nombre || "Desconocido",
     };
 
-    const io = getIO(); // Tu instancia global de socket.io
-    io.emit("chat message", fullMessage); // Enviar a todos
+    const io = getIO(); 
+    io.emit("chat message", fullMessage); 
 
     res.json({ message: fullMessage });
   } catch (error) {
