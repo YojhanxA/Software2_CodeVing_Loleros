@@ -15,7 +15,7 @@ app.use(express.json());
 app.use("/api", usersRoutes);
 
 // Socket.io
-init(httpServer); // inicializas y configuras `io`
+init(httpServer); 
 
 // Inicia servidores
 httpServer.listen(4000, () => {

@@ -8,7 +8,7 @@ const MessageSchema = new Schema({
 });
 
 const ChatSchema = new Schema({
-  match_id: { type: String, ref: "Matches", required: true }, // Relación con el match
+  match_id: { type: String, ref: "Matches", required: true },
   messages: [MessageSchema],
 });
 
