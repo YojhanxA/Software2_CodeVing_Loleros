@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose"); // Asegúrate de tener esta línea
+const { Schema, model } = require("mongoose"); 
 const { v4: uuidv4 } = require('uuid');
 
 const SwipeSchema = new Schema({
