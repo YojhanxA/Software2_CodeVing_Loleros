@@ -2,18 +2,29 @@
 const express = require("express");
 const { dbConection } = require("./database/config");
 const usersRoutes = require("./routes/users");
-const messagesRoutes = require("./routes/messages"); // Importa las rutas de mensajes
+const messagesRoutes = require("./routes/messages");
+const cors = require("cors"); // 👈 importa cors
 require("dotenv").config();
 
 const PORT = process.env.APP_PORT;
 const app = express();
 
-app.use(express.json());
-app.use("/api", usersRoutes);
-app.use("/api", messagesRoutes); // Usa las rutas de mensajes
+// ✅ Configuración CORS
+app.use(cors({
+  origin: "http://localhost:5173", // frontend con Vite
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
-// Start connection to MongoDB
+app.use(express.json());
+
+// Rutas
+app.use("/api", usersRoutes);
+app.use("/api", messagesRoutes);
+
+// Conexión a MongoDB
 dbConection();
+
 app.listen(PORT, () => {
-    console.log("express.js app is running at port: " + PORT);
+  console.log("express.js app is running at port: " + PORT);
 });
