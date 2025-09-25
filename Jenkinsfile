@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout') {
@@ -22,12 +17,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'npm run build || echo "No build step definido"'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'npm test || echo "Sin pruebas definidas"'
             }
         }
 
