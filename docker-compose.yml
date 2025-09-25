@@ -23,7 +23,7 @@ services:
       - mongo-data:/data/db
 
   jenkins:
-    image: jenkins/jenkins:lts-jdk17  # Imagen base de Jenkins con JDK 17
+    build: ./jenkins   # 👉 aquí usamos el Dockerfile personalizado
     container_name: citas-jenkins
     user: root
     ports:
@@ -34,11 +34,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
-    # Instalar Docker CLI dentro del contenedor de Jenkins
-    command: >
-      bash -c "apt-get update &&
-               apt-get install -y docker.io &&
-               exec /usr/local/bin/jenkins.sh"
 
 volumes:
   mongo-data:
