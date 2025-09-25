@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18'   // Usa la imagen oficial de Node.js con npm incluido
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Monta el socket Docker
+        }
+    }
 
     stages {
         stage('Checkout') {
