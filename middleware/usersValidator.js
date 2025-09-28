@@ -5,12 +5,36 @@ const jwt = require("jsonwebtoken");
 const users = [];
 const myMatch = [];
 const createUserRules = [
-  body("ciudad").notEmpty().escape().isString(),
-  body("nombre").notEmpty().escape().isString(),
-  body("edad").notEmpty().escape().isInt({ min: 18 }),
-  body("genero").notEmpty().escape().isString(),
-  body("email").notEmpty().escape().isEmail(),
-  body("password").notEmpty().escape().isString().isLength({ min: 6 }),
+  body("ciudad")
+    .notEmpty()
+    .escape()
+    .isString()
+    .withMessage("El campo ciudad es obligatorio"),
+  body("nombre")
+    .notEmpty()
+    .escape()
+    .isString()
+    .withMessage("El campo nombre es obligatorio"),
+  body("edad")
+    .notEmpty()
+    .escape()
+    .isInt({ min: 18 })
+    .withMessage("El campo edad es obligatorio y debe ser mayor de 18"),
+  body("genero")
+    .notEmpty()
+    .escape()
+    .isString()
+    .withMessage("El campo genero es obligatorio"),
+  body("email")
+    .notEmpty()
+    .escape()
+    .isEmail()
+    .withMessage("El campo email es obligatorio y debe ser un email válido"),
+  body("password")
+    .notEmpty()
+    .escape()
+    .isLength({ min: 6 })
+    .withMessage("La contraseña debe tener al menos 6 caracteres"),
   body("preferencias").optional().isObject(),
   body("ubicacion").optional().escape().isString(),
   body("fotoPerfil").optional().escape().isURL(),
@@ -58,7 +82,6 @@ const isVisValidAuth = async (req, res, next) => {
     });
     res.status(200).json({
       ok: true,
-      msg: "Usuario autenticado correctamente",
       user,
       token,
     });
