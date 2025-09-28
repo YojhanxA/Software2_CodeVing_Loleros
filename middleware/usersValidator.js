@@ -7,37 +7,49 @@ const myMatch = [];
 const createUserRules = [
   body("ciudad")
     .notEmpty()
-    .escape()
+    .withMessage("El campo ciudad es obligatorio")
     .isString()
-    .withMessage("El campo ciudad es obligatorio"),
+    .withMessage("El campo ciudad debe ser un string")
+    .escape(),
+
   body("nombre")
     .notEmpty()
-    .escape()
+    .withMessage("El campo nombre es obligatorio")
     .isString()
-    .withMessage("El campo nombre es obligatorio"),
+    .withMessage("El campo nombre debe ser un string")
+    .escape(),
+
   body("edad")
     .notEmpty()
-    .escape()
+    .withMessage("El campo edad es obligatorio")
     .isInt({ min: 18 })
-    .withMessage("El campo edad es obligatorio y debe ser mayor de 18"),
+    .withMessage("El campo edad debe ser mayor de 18")
+    .escape(),
+
   body("genero")
     .notEmpty()
-    .escape()
+    .withMessage("El campo genero es obligatorio")
     .isString()
-    .withMessage("El campo genero es obligatorio"),
+    .withMessage("El campo genero debe ser un string")
+    .escape(),
+
   body("email")
     .notEmpty()
-    .escape()
+    .withMessage("El campo email es obligatorio")
     .isEmail()
-    .withMessage("El campo email es obligatorio y debe ser un email válido"),
+    .withMessage("El campo email debe ser un email válido")
+    .escape(),
+
   body("password")
     .notEmpty()
-    .escape()
+    .withMessage("El campo password es obligatorio")
     .isLength({ min: 6 })
-    .withMessage("La contraseña debe tener al menos 6 caracteres"),
+    .withMessage("La contraseña debe tener al menos 6 caracteres")
+    .escape(),
+
   body("preferencias").optional().isObject(),
-  body("ubicacion").optional().escape().isString(),
-  body("fotoPerfil").optional().escape().isURL(),
+  body("ubicacion").optional().isString().escape(),
+  body("fotoPerfil").optional().isURL().escape(),
 ];
 
 const isValid = async (req, res, next) => {
