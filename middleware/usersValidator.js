@@ -7,65 +7,49 @@ const myMatch = [];
 const createUserRules = [
   body("ciudad")
     .notEmpty()
-    .withMessage("El campo ciudad es obligatorio")
+    .escape()
     .isString()
-    .withMessage("El campo ciudad debe ser un string")
-    .escape(),
-
+    .withMessage("El campo ciudad es obligatorio"),
   body("nombre")
     .notEmpty()
-    .withMessage("El campo nombre es obligatorio")
+    .escape()
     .isString()
-    .withMessage("El campo nombre debe ser un string")
-    .escape(),
-
+    .withMessage("El campo nombre es obligatorio"),
   body("edad")
     .notEmpty()
-    .withMessage("El campo edad es obligatorio")
+    .escape()
     .isInt({ min: 18 })
-    .withMessage("El campo edad debe ser mayor de 18")
-    .escape(),
-
+    .withMessage("El campo edad es obligatorio y debe ser mayor de 18"),
   body("genero")
     .notEmpty()
-    .withMessage("El campo genero es obligatorio")
+    .escape()
     .isString()
-    .withMessage("El campo genero debe ser un string")
-    .escape(),
-
+    .withMessage("El campo genero es obligatorio"),
   body("email")
     .notEmpty()
-    .withMessage("El campo email es obligatorio")
+    .escape()
     .isEmail()
-    .withMessage("El campo email es obligatorio")
-    .escape(),
-
+    .withMessage("El campo email es obligatorio y debe ser un email válido"),
   body("password")
     .notEmpty()
-    .withMessage("El campo password es obligatorio")
+    .escape()
     .isLength({ min: 6 })
-    .withMessage("La contraseña debe tener al menos 6 caracteres")
-    .escape(),
-
+    .withMessage("La contraseña debe tener al menos 6 caracteres"),
   body("preferencias").optional().isObject(),
-  body("ubicacion").optional().isString().escape(),
-  body("fotoPerfil").optional().isURL().escape(),
+  body("ubicacion").optional().escape().isString(),
+  body("fotoPerfil").optional().escape().isURL(),
 ];
-
 const isValid = async (req, res, next) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
     return res.status(422).json({ errors: result.array() });
   }
-
   const { nombre, email } = req.body;
-
   try {
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(409).json({ message: "El usuario ya existe" });
     }
-
     next();
   } catch (error) {
     console.error("Error verificando usuario:", error);
@@ -74,12 +58,10 @@ const isValid = async (req, res, next) => {
       .json({ message: "Error en el servidor al verificar el usuario" });
   }
 };
-
 const isVisValidAuth = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email, password });
-
     if (!user) {
       return res.status(400).json({
         ok: false,
@@ -88,15 +70,10 @@ const isVisValidAuth = async (req, res, next) => {
         },
       });
     }
-
     const token = jwt.sign({ userId: user.id }, process.env.SECRET_JWT, {
       expiresIn: "1h",
     });
-    res.status(200).json({
-      ok: true,
-      user,
-      token,
-    });
+    res.status(200).json({ ok: true, user, token });
   } catch (error) {
     console.error("Error al autenticar usuario:", error.message);
     res
@@ -104,16 +81,14 @@ const isVisValidAuth = async (req, res, next) => {
       .json({ ok: false, error: { message: "Error en el servidor" } });
   }
 };
-
 const matches = (req, res, next) => {
   const { userId, nombre, action } = req.body;
   if (action == "like") {
     const matchh = { userId, nombre, action };
     myMatch.push(matchh);
-    res.status(200).json({
-      message: "hay match con " + nombre,
-      data: { userId, nombre },
-    });
+    res
+      .status(200)
+      .json({ message: "hay match con " + nombre, data: { userId, nombre } });
   } else {
     res.status(200).json({
       message: "No hay match con " + nombre,
@@ -122,13 +97,10 @@ const matches = (req, res, next) => {
     next();
   }
 };
-
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-
   if (token == null) return res.sendStatus(401);
-
   jwt.verify(token, process.env.SECRET_JWT, (err, user) => {
     if (err) return res.sendStatus(403);
     req.userId = user.userId;
@@ -136,7 +108,6 @@ const authenticateToken = (req, res, next) => {
     next();
   });
 };
-
 module.exports = {
   createUserRules,
   users,
