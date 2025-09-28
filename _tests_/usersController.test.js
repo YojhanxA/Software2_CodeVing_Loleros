@@ -72,6 +72,7 @@ describe("usersController", () => {
       fotoPerfil: "http://example.com/photo.jpg",
       email: "test@example.com",
       password: "password123",
+      ciudad: "Bogotá",
     };
 
     const response = await request(app).post("/register").send(userData);
@@ -104,6 +105,7 @@ describe("usersController", () => {
       genero: "Femenino",
       email: "existing@example.com",
       password: "anotherpassword",
+      ciudad: "Bogotá",
     };
 
     const response = await request(app).post("/register").send(userData);
@@ -257,6 +259,7 @@ describe("usersController", () => {
       password: "passb",
       edad: 28,
       genero: "F",
+      ciudad: "Cali",
     });
     await Promise.all([user1.save(), user2.save()]);
 
