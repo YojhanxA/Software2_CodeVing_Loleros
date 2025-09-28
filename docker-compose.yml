@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  # mongo service
+  tinder_mongodb:
+    container_name: tinder_mongodb
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  tinder_api:
+    restart: always
+    build: .
+    volumes:
+      - ./:/app
+    ports:
+      - "3000:3000"
+    environment:
+      APP_PORT: 3000
+      MONGODB_URL: mongodb+srv://yojhan:cocoloco321@cluster0.6xasoxy.mongodb.net
+      DB_NAME: tinder
+    depends_on:
+      - tinder_mongodb
+
+volumes:
+  mongo_data: {}
