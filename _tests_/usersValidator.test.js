@@ -73,7 +73,6 @@ describe("usersValidator Middleware", () => {
 
     it("should fail validation for missing required fields", async () => {
       const userData = {
-        email: "invalid@example.com",
         password: "short",
       };
 
