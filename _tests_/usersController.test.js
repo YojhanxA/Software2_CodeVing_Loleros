@@ -18,8 +18,6 @@ jest.mock("../socket", () => ({
   })),
 }));
 
-const { getIO } = require("../socket");
-
 let mongoServer;
 let app;
 
