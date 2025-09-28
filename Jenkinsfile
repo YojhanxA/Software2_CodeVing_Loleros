@@ -1,11 +1,10 @@
 pipeline {
     agent any
 
-    stages{
-        stages("install dependencies"){
-            steps{
-                echo "starting installing dependencies..."
-
+    stages {
+        stage("Install dependencies") {
+            steps {
+                echo "Starting installing dependencies..."
                 script {
                     if(isUnix()){
                         sh 'npm install'
@@ -15,10 +14,10 @@ pipeline {
                 }
             }
         }
-        stage ("Run unit tests(JEST)"){
-            steps{
-                echo "starting running unit tests..."
 
+        stage("Run unit tests (JEST)") {
+            steps {
+                echo "Starting running unit tests..."
                 script {
                     if(isUnix()){
                         sh 'npm run test'
@@ -28,25 +27,27 @@ pipeline {
                 }
             }
         }
-    }
-    stage ("down container"){
-        steps{
-            script {
-                if(isUnix()){
-                    sh 'docker-compose down -v'
-                } else {
-                    bat 'docker-compose down -v'
+
+        stage("Down container") {
+            steps {
+                script {
+                    if(isUnix()){
+                        sh 'docker-compose down -v'
+                    } else {
+                        bat 'docker-compose down -v'
+                    }
                 }
             }
         }
-    }
-    stage ("build and up container"){
-        steps{
-            script {
-                if(isUnix()){
-                    sh 'docker-compose up --build -d'
-                } else {
-                    bat 'docker-compose up --build -d'
+
+        stage("Build and up container") {
+            steps {
+                script {
+                    if(isUnix()){
+                        sh 'docker-compose up --build -d'
+                    } else {
+                        bat 'docker-compose up --build -d'
+                    }
                 }
             }
         }
