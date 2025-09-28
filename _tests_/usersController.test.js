@@ -17,6 +17,19 @@ jest.mock("../socket", () => ({
     emit: jest.fn(),
   })),
 }));
+let mockIO;
+
+beforeEach(async () => {
+  // reinicia mockIO
+  mockIO = getIO();
+  mockIO.emit.mockClear();
+
+  // limpia la base de datos
+  await Users.deleteMany({});
+  await Swipes.deleteMany({});
+  await Matches.deleteMany({});
+  await Chat.deleteMany({});
+});
 
 let mongoServer;
 let app;
@@ -52,13 +65,6 @@ beforeAll(async () => {
 afterAll(async () => {
   await mongoose.disconnect();
   await mongoServer.stop();
-});
-
-beforeEach(async () => {
-  await Users.deleteMany({});
-  await Swipes.deleteMany({});
-  await Matches.deleteMany({});
-  await Chat.deleteMany({});
 });
 
 describe("usersController", () => {

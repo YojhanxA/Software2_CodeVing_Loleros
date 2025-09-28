@@ -37,7 +37,7 @@ const createUserRules = [
     .notEmpty()
     .withMessage("El campo email es obligatorio")
     .isEmail()
-    .withMessage("El campo email debe ser un email válido")
+    .withMessage("El campo email es obligatorio")
     .escape(),
 
   body("password")
