@@ -339,7 +339,6 @@ describe("usersController", () => {
     );
     expect(response.body.message).toHaveProperty("senderName", "Sender");
 
-    const mockIO = getIO();
     expect(mockIO.emit).toHaveBeenCalledWith(
       "chat message",
       expect.objectContaining({
