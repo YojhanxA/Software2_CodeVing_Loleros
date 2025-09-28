@@ -95,7 +95,7 @@ const list = async (req, res) => {
     }
 
     const users = await Users.find(filter);
-    res.status(200).json({ usuarios: users });
+    res.status(200).json(users);
   } catch (error) {
     console.error("Error al listar usuarios:", error);
     res

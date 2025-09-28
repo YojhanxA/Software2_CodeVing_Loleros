@@ -11,11 +11,14 @@ const Chat = require("../models/Chat");
 const jwt = require("jsonwebtoken");
 const { getIO } = require("../socket");
 
+// _tests_/usersController.test.js
 jest.mock("../socket", () => ({
   getIO: jest.fn(() => ({
     emit: jest.fn(),
   })),
 }));
+
+const { getIO } = require("../socket");
 
 let mongoServer;
 let app;
@@ -27,7 +30,6 @@ beforeAll(async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-
   app = express();
   app.use(express.json());
   app.post("/register", usersController.register);
@@ -342,9 +344,9 @@ describe("usersController", () => {
       "chat message",
       expect.objectContaining({
         message: "This is a test message.",
+        matchId: "testMatchId",
         senderId: "senderId",
         senderName: "Sender",
-        matchId: "testMatchId",
       })
     );
 
