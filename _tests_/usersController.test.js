@@ -9,19 +9,17 @@ const Swipes = require("../models/Swipes");
 const Matches = require("../models/Matches");
 const Chat = require("../models/Chat");
 const jwt = require("jsonwebtoken");
-const { getIO } = require("../socket");
+// __tests__/usersController.test.js
+const ioMock = { emit: jest.fn() };
 
-// _tests_/usersController.test.js
 jest.mock("../socket", () => ({
-  getIO: jest.fn(() => ({
-    emit: jest.fn(),
-  })),
+  getIO: jest.fn(() => ioMock),
 }));
+
 let mockIO;
 
 beforeEach(async () => {
-  // reinicia mockIO
-  mockIO = getIO();
+  mockIO = ioMock;
   mockIO.emit.mockClear();
 
   // limpia la base de datos
