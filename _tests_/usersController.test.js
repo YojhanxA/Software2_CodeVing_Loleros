@@ -10,19 +10,24 @@ const Matches = require("../models/Matches");
 const Chat = require("../models/Chat");
 const jwt = require("jsonwebtoken");
 // __tests__/usersController.test.js
-const ioMock = { emit: jest.fn() };
+//const ioMock = { emit: jest.fn() };
+// __tests__/usersController.test.js
 
-jest.mock("../socket", () => ({
-  getIO: jest.fn(() => ioMock),
-}));
+// Creamos un mock fijo dentro de jest.mock
+jest.mock("../socket", () => {
+  const emit = jest.fn();
+  return {
+    getIO: jest.fn(() => ({ emit })),
+    __emitMock: emit, // opcional, para acceder desde el test
+  };
+});
 
-let mockIO;
+const { getIO, __emitMock } = require("../socket"); // desestructuramos el emit mock
 
 beforeEach(async () => {
-  mockIO = ioMock;
-  mockIO.emit.mockClear();
+  __emitMock.mockClear(); // reseteamos emit antes de cada test
 
-  // limpia la base de datos
+  // limpiamos DB
   await Users.deleteMany({});
   await Swipes.deleteMany({});
   await Matches.deleteMany({});
@@ -341,7 +346,7 @@ describe("usersController", () => {
     );
     expect(response.body.message).toHaveProperty("senderName", "Sender");
 
-    expect(mockIO.emit).toHaveBeenCalledWith(
+    expect(__emitMock).toHaveBeenCalledWith(
       "chat message",
       expect.objectContaining({
         message: "This is a test message.",
