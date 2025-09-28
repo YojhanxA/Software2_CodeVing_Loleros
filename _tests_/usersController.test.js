@@ -350,9 +350,9 @@ describe("usersController", () => {
       "chat message",
       expect.objectContaining({
         message: "This is a test message.",
-        matchId: "testMatchId",
-        senderId: "senderId",
+        sender_id: "senderId",
         senderName: "Sender",
+        receiver_id: "receiverId",
       })
     );
 
