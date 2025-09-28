@@ -3,7 +3,7 @@ const Users = require("../models/Users");
 const Swipes = require("../models/Swipes");
 const Matches = require("../models/Matches");
 const jwt = require("jsonwebtoken");
-const Chat = require("../models/chat");
+const Chat = require("../models/Chat");
 const User = require("../models/Users");
 const { v4: uuidv4 } = require("uuid");
 const { getIO } = require("../socket"); // Asegúrate de importar bien esto
@@ -75,17 +75,16 @@ const list = async (req, res) => {
 
     // Obtener matches (también comparando UUIDs)
     const matches = await Matches.find({
-      $or: [
-        { usuario1_id: currentUser.id },
-        { usuario2_id: currentUser.id },
-      ],
+      $or: [{ usuario1_id: currentUser.id }, { usuario2_id: currentUser.id }],
     });
 
     const idsMatch = matches.map((m) =>
       m.usuario1_id === currentUser.id ? m.usuario2_id : m.usuario1_id
     );
 
-    const idsExcluidos = [...new Set([...idsSwiped, ...idsMatch, currentUser.id])];
+    const idsExcluidos = [
+      ...new Set([...idsSwiped, ...idsMatch, currentUser.id]),
+    ];
 
     const filter = {
       id: { $nin: idsExcluidos },
@@ -99,10 +98,11 @@ const list = async (req, res) => {
     res.status(200).json({ usuarios: users });
   } catch (error) {
     console.error("Error al listar usuarios:", error);
-    res.status(500).json({ message: "Error en el servidor al listar usuarios" });
+    res
+      .status(500)
+      .json({ message: "Error en el servidor al listar usuarios" });
   }
 };
-
 
 const swipe = async (req, res) => {
   const { destinoId, accion } = req.body;
@@ -250,4 +250,3 @@ module.exports = {
   getMatch,
   sendMessage,
 };
-
