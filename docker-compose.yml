@@ -20,7 +20,7 @@ services:
       - "3000:3000"
     environment:
       APP_PORT: 3000
-      MONGODB_URL: mongodb+srv://yojhan:cocoloco321@cluster0.6xasoxy.mongodb.net
+      MONGODB_URL: mongodb+srv://yojhan:cocoloco321@cluster0.6xasoxy.mongodb.net/codeving?retryWrites=true&w=majority
       DB_NAME: codeving
     depends_on:
       - tinder_mongodb
