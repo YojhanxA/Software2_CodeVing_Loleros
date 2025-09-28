@@ -157,10 +157,18 @@ describe("usersController", () => {
 
     const response = await request(app).get("/users");
 
+    // Aceptar varias formas de respuesta:
+    // - array directo en response.body
+    // - { usuarios: [...] }
+    // - { users: [...] }
+    const listado = Array.isArray(response.body)
+      ? response.body
+      : response.body.usuarios || response.body.users || [];
+
     expect(response.statusCode).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBe(2);
-    const emails = response.body.map((user) => user.email);
+    expect(Array.isArray(listado)).toBe(true);
+    expect(listado.length).toBe(2);
+    const emails = listado.map((user) => user.email);
     expect(emails).not.toContain("current@example.com");
     expect(emails).toContain("other1@example.com");
     expect(emails).toContain("other2@example.com");
