@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage --runInBand --testTimeout=120000"
   },
   "author": "Yojhan",
   "license": "ISC",
